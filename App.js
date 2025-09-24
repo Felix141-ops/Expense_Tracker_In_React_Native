@@ -9,7 +9,8 @@ import DashboardScreen from "./screens/DashboardScreen";
 import ExpensesScreen from "./screens/ExpensesScreen";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
 import ProfileScreen from "./screens/ProfileScreen";
-import LoginScreen from "./screens/LoginScreen"; // ✅ new
+import LoginScreen from "./screens/LoginScreen"; 
+import SignupScreen from "./screens/SignupScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -46,6 +47,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="MainTabs" component={MainTabs} />
       </Stack.Navigator>
     </NavigationContainer>

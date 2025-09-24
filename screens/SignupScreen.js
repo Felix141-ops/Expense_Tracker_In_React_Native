@@ -1,22 +1,36 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 
-export default function LoginScreen({ navigation }) {
+export default function SignupScreen({ navigation }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleLogin = () => {
-    // TODO: Replace with real authentication (e.g. API call / Firebase)
-    if (email === "test@example.com" && password === "123456") {
-      navigation.replace("MainTabs"); // Navigate to the tab navigator
-    } else {
-      alert("Invalid credentials. Try test@example.com / 123456");
+  const handleSignup = () => {
+    if (!name || !email || !password || !confirmPassword) {
+      alert("Please fill all fields");
+      return;
     }
+    if (password !== confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    // TODO: Send signup data to backend
+    alert("Account created successfully!");
+    navigation.replace("Login"); // Go back to login after signup
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Expense Tracker</Text>
+      <Text style={styles.title}>Create Account</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Full Name"
+        value={name}
+        onChangeText={setName}
+      />
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -32,13 +46,20 @@ export default function LoginScreen({ navigation }) {
         onChangeText={setPassword}
         secureTextEntry
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignup}>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.replace("Signup")}>
-        <Text style={styles.signupText}>Don’t have an account? Sign Up</Text>
+      <TouchableOpacity onPress={() => navigation.replace("Login")}>
+        <Text style={styles.loginText}>Already have an account? Login</Text>
       </TouchableOpacity>
     </View>
   );
@@ -52,10 +73,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   title: {
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 40,
+    marginBottom: 30,
   },
   input: {
     borderWidth: 1,
@@ -77,7 +98,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  signupText: {
+  loginText: {
     marginTop: 20,
     textAlign: "center",
     color: "#007AFF",
