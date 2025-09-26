@@ -1,4 +1,7 @@
 // App.js
+/// Main app entry point
+/// Sets up navigation structure
+/// Includes authentication and main tab navigator
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -14,7 +17,8 @@ import SignupScreen from "./screens/SignupScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+/// Main tab navigator
+/// Contains Dashboard, Expenses, Add Expense, and Profile tabs
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -41,7 +45,8 @@ function MainTabs() {
     </Tab.Navigator>
   );
 }
-
+/// Root stack navigator
+/// Handles authentication flow and main app tabs
 export default function App() {
   return (
     <NavigationContainer>

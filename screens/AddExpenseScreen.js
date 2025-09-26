@@ -11,7 +11,9 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
+/// Add Expense screen component
+/// Form to add new expenses with amount, category, date, and description
+/// Floating save button for better UX
 export default function AddExpenseScreen() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
@@ -95,7 +97,7 @@ export default function AddExpenseScreen() {
     </View>
   );
 }
-
+/// Page Styling
 const styles = StyleSheet.create({
   container: {
     flex: 1,

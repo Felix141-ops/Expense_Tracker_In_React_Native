@@ -8,9 +8,10 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-
+//// Expense screen component
+//// Search and filter expenses
+//// Displays list of expenses with category icons
 const filters = ["All", "Today", "This Week", "Food", "Transport", "Rent"];
-
 const expensesData = [
   { id: "1", category: "Food", description: "Burger", date: "Sep 21", amount: -12 },
   { id: "2", category: "Transport", description: "Taxi", date: "Sep 20", amount: -6 },
@@ -24,6 +25,9 @@ export default function ExpensesScreen() {
   const [selectedFilter, setSelectedFilter] = useState("All");
 
   // Filter by search + category
+  /// Expense filtering logic
+  /// Filters expenses based on search text and selected category
+  /// Updates displayed expenses dynamically
   const filteredExpenses = expensesData.filter((expense) => {
     const matchesSearch = expense.description
       .toLowerCase()
@@ -33,7 +37,9 @@ export default function ExpensesScreen() {
 
     return matchesSearch && matchesFilter;
   });
-
+/// Expense screen component
+/// Search and filter expenses
+/// Displays list of expenses with category icons
   return (
     <View style={styles.container}>
       {/* Search Bar */}
@@ -94,7 +100,11 @@ export default function ExpensesScreen() {
     </View>
   );
 }
-
+/// Page Styling
+/// Uses Flexbox for layout
+/// Consistent padding and margin for spacing
+/// Rounded corners for inputs and buttons
+/// Primary color for buttons and links
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9F9F9", padding: 15 },
   searchInput: {

@@ -6,13 +6,13 @@ import { PieChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
 
 const screenWidth = Dimensions.get("window").width;
-
+// Sample data
 const data = [
   { name: "Food", amount: 450, color: "#FF6384", legendFontColor: "#7F7F7F", legendFontSize: 12 },
   { name: "Transport", amount: 200, color: "#36A2EB", legendFontColor: "#7F7F7F", legendFontSize: 12 },
   { name: "Rent", amount: 800, color: "#FFCE56", legendFontColor: "#7F7F7F", legendFontSize: 12 },
 ];
-
+// Sample recent transactions
 const recentTransactions = [
   { id: "1", category: "Food", description: "Lunch at Cafe", date: "Sep 20", amount: -15 },
   { id: "2", category: "Transport", description: "Uber Ride", date: "Sep 19", amount: -8 },
@@ -21,7 +21,8 @@ const recentTransactions = [
   { id: "5", category: "Transport", description: "Bus Ticket", date: "Sep 17", amount: -3 },
 ];
 
-
+/// Dashboard screen component
+/// Displays summary cards, pie chart, and recent transactions
 export default function DashboardScreen() {
   return (
     <FlatList
@@ -30,7 +31,7 @@ export default function DashboardScreen() {
           {/* Top Bar */}
           <View style={styles.topBar}>
             <Text style={styles.greeting}>Hello Felix 👋</Text>
-            <Image source={require("../assets/icon.png")} style={styles.profileIcon} />
+            <Image source={require("../assets/icon.webp")} style={styles.profileIcon} />
           </View>
           {/* Summary Cards */}
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardRow}>
@@ -85,7 +86,11 @@ export default function DashboardScreen() {
   );
 }
 
-
+/// Page Styling
+/// Uses Flexbox for layout
+/// Consistent padding and margin for spacing
+/// Rounded corners for inputs and buttons
+/// Primary color for buttons and links
 const styles = StyleSheet.create({
   container: { backgroundColor: "#F9F9F9", padding: 15 },
   topBar: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },

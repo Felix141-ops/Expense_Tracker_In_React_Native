@@ -8,12 +8,14 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = () => {
     // TODO: Replace with real authentication (e.g. API call / Firebase)
     if (email === "test@example.com" && password === "123456") {
-      navigation.replace("MainTabs"); // Navigate to the tab navigator
+      navigation.replace("MainTabs"); 
+      // Navigate to the tab navigator
     } else {
       alert("Invalid credentials. Try test@example.com / 123456");
     }
   };
-
+/// Login screen component
+/// Simple login form with navigation to signup and main app
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Expense Tracker</Text>
@@ -43,7 +45,11 @@ export default function LoginScreen({ navigation }) {
     </View>
   );
 }
-
+/// Page Styling
+/// Uses Flexbox for layout
+/// Consistent padding and margin for spacing
+/// Rounded corners for inputs and buttons
+/// Primary color for buttons and links
 const styles = StyleSheet.create({
   container: {
     flex: 1,

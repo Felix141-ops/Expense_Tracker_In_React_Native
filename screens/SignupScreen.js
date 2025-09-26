@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
-
+///Signup screen component
+/// Allows users to create a new account
+/// Includes fields for name, email, password, and confirm password
+/// Function to handle signup logic
+/// Validates input and provides feedback
 export default function SignupScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const handleSignup = () => {
     if (!name || !email || !password || !confirmPassword) {
       alert("Please fill all fields");
@@ -20,7 +23,7 @@ export default function SignupScreen({ navigation }) {
     alert("Account created successfully!");
     navigation.replace("Login"); // Go back to login after signup
   };
-
+/// JSX for rendering the signup form
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create Account</Text>
@@ -64,7 +67,11 @@ export default function SignupScreen({ navigation }) {
     </View>
   );
 }
-
+///Page Styling
+/// Uses Flexbox for layout
+/// Consistent padding and margin for spacing
+/// Rounded corners for inputs and buttons
+/// Primary color for buttons and links
 const styles = StyleSheet.create({
   container: {
     flex: 1,

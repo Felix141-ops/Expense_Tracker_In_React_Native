@@ -9,7 +9,9 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
+/// Profile screen component
+/// Displays user information and settings
+/// Allows theme toggling, data export, and logout
 export default function ProfileScreen() {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
@@ -31,7 +33,7 @@ export default function ProfileScreen() {
       {/* Profile Section */}
       <View style={styles.profileSection}>
         <Image
-          source={require("../assets/icon.png")}
+          source={require("../assets/icon.webp")}
           style={styles.profilePic}
         />
         <Text style={styles.name}>Felix Muia</Text>
@@ -61,7 +63,11 @@ export default function ProfileScreen() {
     </View>
   );
 }
-
+/// Page Styling
+/// Uses Flexbox for layout
+/// Consistent padding and margin for spacing
+/// Rounded corners for inputs and buttons
+/// Primary color for buttons and links
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F9F9F9", padding: 20 },
   profileSection: {
