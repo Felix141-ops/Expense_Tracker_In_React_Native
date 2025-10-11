@@ -9,23 +9,47 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
+import { useAuth } from '../contexts/AuthContext'
+
 /// Profile screen component
 /// Displays user information and settings
 /// Allows theme toggling, data export, and logout
-export default function ProfileScreen() {
+export default function ProfileScreen({ navigation }) {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { user, signOut } = useAuth()
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     Alert.alert("Theme Changed", `Dark Mode: ${!isDarkMode ? "On" : "Off"}`);
   };
-
+  /*
   const handleExport = () => {
     Alert.alert("Export Data", "Your expense data has been exported ✅");
-  };
+  };*/
 
-  const handleLogout = () => {
-    Alert.alert("Logout", "You have been logged out 🚪");
+  const handleLogout = async () => {
+    Alert.alert(
+      "Logout",
+      "Are you sure you want to logout?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel"
+        },
+        { 
+          text: "Logout", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await signOut();
+              // Navigation will be handled by auth state change
+            } catch (error) {
+              Alert.alert('Error', error.message || 'Failed to logout');
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -36,8 +60,8 @@ export default function ProfileScreen() {
           source={require("../assets/icon.webp")}
           style={styles.profilePic}
         />
-        <Text style={styles.name}>Felix Muia</Text>
-        <Text style={styles.email}>felix@example.com</Text>
+        <Text style={styles.name}>{user?.email?.split('@')[0] || 'User'}</Text>
+        <Text style={styles.email}>Email: {user?.email}</Text>
       </View>
 
       {/* Settings */}
@@ -47,9 +71,9 @@ export default function ProfileScreen() {
           <Switch value={isDarkMode} onValueChange={toggleTheme} />
         </View>
 
-        <TouchableOpacity style={styles.settingRow} onPress={handleExport}>
+        {/*<TouchableOpacity style={styles.settingRow} onPress={handleExport}>
           <Text style={styles.settingText}>Export Data</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
 
         <TouchableOpacity style={styles.settingRow}>
           <Text style={styles.settingText}>Currency: USD ($)</Text>

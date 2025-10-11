@@ -1,21 +1,37 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { useAuth } from '../contexts/AuthContext'
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false)
+  const { signIn, user } = useAuth()
 
-  const handleLogin = () => {
-    // TODO: Replace with real authentication (e.g. API call / Firebase)
-    if (email === "test@example.com" && password === "123456") {
-      navigation.replace("MainTabs"); 
-      // Navigate to the tab navigator
-    } else {
-      alert("Invalid credentials. Try test@example.com / 123456");
+  // Move useEffect to the top level of component
+  //useEffect(() => {
+    //if (user) {
+     // navigation.replace("MainTabs");
+   // }
+ // }, [user, navigation]);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields')
+      return;
+    }
+
+    setLoading(true)
+    try {
+      await signIn(email, password)
+      // Navigation will be handled by the useEffect above
+    } catch (error) {
+      Alert.alert('Error', error.message)
+    } finally {
+      setLoading(false)
     }
   };
-/// Login screen component
-/// Simple login form with navigation to signup and main app
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Expense Tracker</Text>
@@ -35,21 +51,17 @@ export default function LoginScreen({ navigation }) {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin} disabled={loading}>
+        <Text style={styles.buttonText}>{loading ? 'Loading...' : 'Sign In'}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.replace("Signup")}>
-        <Text style={styles.signupText}>Don’t have an account? Sign Up</Text>
+        <Text style={styles.signupText}>Don't have an account? Sign Up</Text>
       </TouchableOpacity>
     </View>
   );
 }
-/// Page Styling
-/// Uses Flexbox for layout
-/// Consistent padding and margin for spacing
-/// Rounded corners for inputs and buttons
-/// Primary color for buttons and links
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

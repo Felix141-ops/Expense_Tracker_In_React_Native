@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { useAuth } from '../contexts/AuthContext'
 ///Signup screen component
 /// Allows users to create a new account
 /// Includes fields for name, email, password, and confirm password
@@ -10,7 +11,10 @@ export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const handleSignup = () => {
+  const [loading, setLoading] = useState(false)
+  const { signUp } = useAuth()
+
+  const handleSignup = async () => {
     if (!name || !email || !password || !confirmPassword) {
       alert("Please fill all fields");
       return;
@@ -19,9 +23,16 @@ export default function SignupScreen({ navigation }) {
       alert("Passwords do not match");
       return;
     }
-    // TODO: Send signup data to backend
-    alert("Account created successfully!");
-    navigation.replace("Login"); // Go back to login after signup
+    setLoading(true)
+    try {
+      await signUp(email, password)
+      Alert.alert('Success', 'Check your email for verification!')
+      navigation.replace("Login"); // Go back to login after signup
+    } catch (error) {
+      Alert.alert('Error', error.message)
+    } finally {
+      setLoading(false)
+    }
   };
 /// JSX for rendering the signup form
   return (
@@ -57,8 +68,8 @@ export default function SignupScreen({ navigation }) {
         secureTextEntry
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+      <TouchableOpacity style={styles.button} onPress={handleSignup} disabled={loading}>
+        <Text style={styles.buttonText}>Create Account</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => navigation.replace("Login")}>

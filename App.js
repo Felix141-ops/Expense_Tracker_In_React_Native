@@ -2,18 +2,21 @@
 /// Main app entry point
 /// Sets up navigation structure
 /// Includes authentication and main tab navigator
-import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-
+import { useEffect, React } from 'react'
+import { supabase } from './lib/supabase'
 import DashboardScreen from "./screens/DashboardScreen";
 import ExpensesScreen from "./screens/ExpensesScreen";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import LoginScreen from "./screens/LoginScreen"; 
 import SignupScreen from "./screens/SignupScreen";
+import RevenueScreen from "./screens/RevenueScreen";
+import { AuthProvider } from "./contexts/AuthContext";
+import { useAuth } from './contexts/AuthContext'
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -42,19 +45,49 @@ function MainTabs() {
       <Tab.Screen name="Expenses" component={ExpensesScreen} />
       <Tab.Screen name="Add" component={AddExpenseScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Revenue" component={RevenueScreen} />
     </Tab.Navigator>
   );
 }
 /// Root stack navigator
 /// Handles authentication flow and main app tabs
-export default function App() {
+function AppNavigator() {
+  const { user } = useAuth();
+
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Signup" component={SignupScreen} />
-        <Stack.Screen name="MainTabs" component={MainTabs} />
+        {!user ? (
+          <>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Signup" component={SignupScreen} />
+          </>
+        ) : (
+          <Stack.Screen name="MainTabs" component={MainTabs} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+export default function App() {
+   useEffect(() => {
+    testSupabaseConnection()
+  }, [])
+  const testSupabaseConnection = async () => {
+    try {
+      const { data, error } = await supabase.from('Expense').select('*').limit(1)
+      if (error) {
+        console.log('Supabase connection error:', error)
+      } else {
+        console.log('Supabase connected successfully!')
+      }
+      } catch (error) {
+        console.log('Connection test failed:', error)
+      }
+    };
+    return (
+      <AuthProvider>
+        <AppNavigator />
+      </AuthProvider>
+    );
+  }
