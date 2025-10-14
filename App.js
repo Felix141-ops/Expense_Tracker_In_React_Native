@@ -17,6 +17,7 @@ import SignupScreen from "./screens/SignupScreen";
 import RevenueScreen from "./screens/RevenueScreen";
 import { AuthProvider } from "./contexts/AuthContext";
 import { useAuth } from './contexts/AuthContext'
+import ManageCategoriesScreen from "./screens/ManageCategoriesScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -63,7 +64,11 @@ function AppNavigator() {
             <Stack.Screen name="Signup" component={SignupScreen} />
           </>
         ) : (
+          <>
           <Stack.Screen name="MainTabs" component={MainTabs} />
+          <Stack.Screen name="ManageCategoriesScreen" component={ManageCategoriesScreen} /> 
+          <Stack.Screen name="AddExpenseScreen" component={AddExpenseScreen} /> 
+          </>
         )}
       </Stack.Navigator>
     </NavigationContainer>
@@ -75,7 +80,7 @@ export default function App() {
   }, [])
   const testSupabaseConnection = async () => {
     try {
-      const { data, error } = await supabase.from('Expense').select('*').limit(1)
+      const { data, error } = await supabase.from('expenses').select('*').limit(1)
       if (error) {
         console.log('Supabase connection error:', error)
       } else {
