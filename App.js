@@ -34,6 +34,7 @@ function MainTabs() {
           else if (route.name === "Expenses") iconName = "list-outline";
           else if (route.name === "Add") iconName = "add-circle-outline";
           else if (route.name === "Profile") iconName = "person-outline";
+          else if (route.name === "Revenue") iconName = "cash-outline";
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -45,8 +46,8 @@ function MainTabs() {
       <Tab.Screen name="Dashboard" component={DashboardScreen} />
       <Tab.Screen name="Expenses" component={ExpensesScreen} />
       <Tab.Screen name="Add" component={AddExpenseScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
       <Tab.Screen name="Revenue" component={RevenueScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }

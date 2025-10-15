@@ -14,22 +14,38 @@ import {
 import { useFocusEffect } from "@react-navigation/native";
 import { PieChart } from "react-native-chart-kit";
 import { Dimensions } from "react-native";
-import { useExpenses } from "../hooks/useExpense";
+import { useFinance } from "../hooks/useFinance";
+import { useAuth } from '../contexts/AuthContext'
 
 const screenWidth = Dimensions.get("window").width;
 
 export default function DashboardScreen({ navigation }) {
-  const { expenses, loading, error, removeExpense, refreshExpenses } = useExpenses();
+  const {
+    expenses,
+    revenues,
+    totalRevenue: totalRevenueFinance,
+    totalExpenses: totalExpensesFinance,
+    netBalance,
+    loading,
+    error,
+    addExpense,
+    removeExpense,
+    addRevenue,
+    removeRevenue,
+    refreshData: refreshAllData
+  } = useFinance();
+  const refreshExpenses = refreshAllData;
+  const refreshFinance = refreshAllData;
   const [chartData, setChartData] = useState([]);
 
     useFocusEffect(
     useCallback(() => {
       refreshExpenses();
-      // optionally return a cleanup function
+      refreshFinance();
       return () => {};
-    }, [refreshExpenses])
+    }, [refreshExpenses, refreshFinance])
   );
-
+  const { user } = useAuth()
   // Process expenses for pie chart
   useEffect(() => {
     if (expenses.length > 0) {
@@ -58,11 +74,16 @@ export default function DashboardScreen({ navigation }) {
     }
   }, [expenses]);
 
-  // Calculate summary statistics
-  const totalSpent = expenses.reduce((sum, expense) => sum + parseFloat(expense.amount), 0);
-  const biggestCategory = chartData.length > 0 
-    ? chartData.reduce((max, category) => category.amount > max.amount ? category : max, chartData[0])
-    : { name: 'No data', amount: 0 };
+    // Use totals from useFinance if available, otherwise compute from expenses
+  const computedTotalExpenses = typeof totalExpensesFinance === "number"
+    ? totalExpensesFinance
+    : expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+
+  // total expenses = sum of positive amounts
+  const totalExpenses = Number(computedTotalExpenses || 0);
+  const totalRevenue = Number(totalRevenueFinance || 0);  
+  const computedNetBalance = totalRevenue - totalExpenses;
+
 
   const handleDeleteExpense = (expenseId, description) => {
     Alert.alert(
@@ -153,27 +174,40 @@ export default function DashboardScreen({ navigation }) {
           <>
             {/* Top Bar */}
             <View style={styles.topBar}>
-              <Text style={styles.greeting}>Hello Felix 👋</Text>
+              <Text style={styles.greeting}>Hello {user?.email?.split('@')[0] || 'User'} 👋</Text>
               <Image source={require("../assets/icon.webp")} style={styles.profileIcon} />
             </View>
 
             {/* Summary Cards */}
             <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardRow}>
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>Total Spent</Text>
-                <Text style={styles.cardValue}>${totalSpent.toFixed(2)}</Text>
-              </View>
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>Biggest Category</Text>
-                <Text style={styles.cardValue}>{biggestCategory.name}</Text>
-                <Text style={styles.cardSubValue}>${biggestCategory.amount.toFixed(2)}</Text>
-              </View>
-              <View style={styles.card}>
-                <Text style={styles.cardTitle}>Total Transactions</Text>
-                <Text style={styles.cardValue}>{expenses.length}</Text>
-              </View>
-            </ScrollView>
-
+              <View style={[styles.card, computedNetBalance >= 0 ? styles.positiveCard : styles.negativeCard]}>
+               <Text style={styles.cardTitle}>Net Balance</Text>
+               <Text style={[
+                 styles.cardValue,
+                 { color: computedNetBalance >= 0 ? '#34C759' : '#FF3B30' }
+                 ]}>
+                 ${computedNetBalance.toFixed(2)}
+               </Text>
+             </View>
+             <View style={styles.card}>
+              <Text style={styles.cardTitle}>Total Revenue</Text>
+              <Text style={[styles.cardValue, { color: '#34C759' }]}>
+                ${totalRevenue.toFixed(2)}
+              </Text>
+             </View>
+             <View style={styles.card}>
+              <Text style={styles.cardTitle}>Total Expenses</Text>
+              <Text style={[styles.cardValue, { color: '#FF3B30' }]}>
+                ${totalExpenses.toFixed(2)}
+              </Text>
+             </View>
+            <View style={styles.card}>
+             <Text style={styles.cardTitle}>Savings Rate</Text>
+             <Text style={styles.cardValue}>
+            {totalRevenue > 0 ? ((computedNetBalance / totalRevenue) * 100).toFixed(1) : 0}%
+            </Text>
+            </View>
+           </ScrollView>
             {/* Pie Chart Section */}
             <View style={styles.chartSection}>
               <View style={styles.sectionHeader}>

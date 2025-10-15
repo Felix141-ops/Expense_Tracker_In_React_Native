@@ -11,6 +11,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { useExpenses } from "../hooks/useExpense";
+import { Ionicons } from '@expo/vector-icons';
 
 /// Expense screen component
 /// Search and filter expenses
@@ -136,7 +137,7 @@ export default function ExpensesScreen() {
           onPress={() => handleDeleteExpense(item.id, item.description)}
           style={styles.deleteButton}
         >
-          <Text style={styles.deleteIcon}>🗑️</Text>
+          <Ionicons name="trash-outline" size={18} color="#FF6B6B" style={styles.deleteIcon} />
         </TouchableOpacity>
       </View>
     </View>
